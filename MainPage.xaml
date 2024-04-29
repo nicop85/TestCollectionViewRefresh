@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:pages="clr-namespace:TestCollectionViewRefresh"
+             x:Class="TestCollectionViewRefresh.MainPage"
+             x:DataType="pages:MainPage">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <pages:FavoriteIconConverter x:Key="favoriteIconConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <Grid RowDefinitions="Auto,*">
+        <Button x:Name="desktopRefreshButton" Text="Refresh List" Command="{Binding RefreshList}"
+                Grid.Row="0"/>
+
+        <RefreshView x:Name="usersListContainer"
+                    Command="{Binding RefreshList}"
+                     Grid.Row="1">
+            <Grid ColumnDefinitions="*" RowDefinitions="*">
+                <CollectionView x:Name="usersList" 
+                            ItemsSource="{Binding UsersToShow}"
+                            Grid.Row="0">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid x:DataType="pages:ShowableUser" ColumnDefinitions="*,Auto">
+                                <Label Text="{Binding FullName}" Padding="10" VerticalOptions="Center" Grid.Column="0"/>
+                                <ImageButton Source="{Binding IsFavorite, Converter={StaticResource favoriteIconConverter}}" 
+                                         Command="{Binding OnPinSelectedChangeCommand, Source={pages:MainPage}}" CommandParameter="{Binding}" 
+                                         Grid.Column="1"/>
+                            </Grid>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </Grid>
+        </RefreshView>
+    </Grid>
+</ContentPage>
